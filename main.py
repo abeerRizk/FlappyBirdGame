@@ -3,6 +3,7 @@ import pygame
 from pygame.locals import *
 
 pygame.init()
+pygame.mixer.init()
 
 clock = pygame.time.Clock()
 fps = 60
@@ -29,6 +30,12 @@ pipe_frequency = 1500 #milliseconds
 last_pipe = pygame.time.get_ticks() - pipe_frequency
 score = 0
 pass_pipe = False
+
+
+#define sounds  
+score_sound = pygame.mixer.Sound('point.wav') 
+gameover_sound = pygame.mixer.Sound('gameover.wav') 
+
 
 
 # Drawing Text
@@ -188,6 +195,8 @@ while run:
 			if bird_group.sprites()[0].rect.left > pipe_group.sprites()[0].rect.right:
 				score += 1
 				pass_pipe = False
+				score_sound.play()
+				 
 
 
 	draw_text(str(score), font, white, int(screen_width / 2), 20)
@@ -228,9 +237,14 @@ while run:
 
 	#check for game over and reset
 	if game_over == True:
+
+		gameover_sound.play()
 		if button.draw() == True:
 			game_over = False
 			score = reset_game()
+
+			gameover_sound.stop()
+			
 			
 
 	for event in pygame.event.get():
